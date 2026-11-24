@@ -94,6 +94,20 @@ src/
 - **exifr** — extracción de GPS del EXIF
 - **swagger-jsdoc + swagger-ui-express** — documentación automática
 
+## Despliegue en Render con Aiven
+
+Docker Compose se usa para desarrollo local. En producción, despliega la API como un Web Service de Render y usa PostgreSQL administrado por Aiven.
+
+En Render configura `npm ci` como comando de instalación y `npm start` como comando de inicio. Define estas variables de entorno con los datos del servicio Aiven:
+
+- `NODE_ENV=production`
+- `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER` y `DB_PASSWORD`
+- `DB_SSL_CA` con el certificado CA de Aiven (PEM); no lo guardes en el repositorio
+- `JWT_SECRET` con un valor aleatorio y privado
+- `JWT_EXPIRES_IN=7d`
+
+`PORT` lo proporciona Render. La conexión habilita TLS y valida el certificado cuando `DB_SSL_CA` está definido. Los servicios gratuitos de Render tienen almacenamiento efímero: las fotos y los reportes guardados localmente en `uploads/` no son persistentes.
+
 ## ejecutar la Base de Datos
 Set-Location "C:\Users\yanet\OneDrive\Documentos\7° SEMESTRE\IBM\GeoDrone-BD\playground\geodrone-backend"
 docker compose up -d --wait postgres

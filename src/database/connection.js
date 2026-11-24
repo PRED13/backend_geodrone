@@ -1,5 +1,7 @@
 const { Sequelize } = require('sequelize');
 
+const sslCa = process.env.DB_SSL_CA;
+
 const sequelize = new Sequelize(
   process.env.DB_NAME || 'geodrone_db',
   process.env.DB_USER || 'postgres',
@@ -9,6 +11,15 @@ const sequelize = new Sequelize(
     port: process.env.DB_PORT || 5432,
     dialect: 'postgres',
     logging: process.env.NODE_ENV === 'development' ? console.log : false,
+    dialectOptions: sslCa
+      ? {
+          ssl: {
+            require: true,
+            rejectUnauthorized: true,
+            ca: sslCa.replace(/\\n/g, '\n'),
+          },
+        }
+      : {},
     define: {
       timestamps: true,
       underscored: true,
