@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: geodrone_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: geodrone_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: geodrone1234
+    ports:
+      - '5434:5432'
+    volumes:
+      - geodrone_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  geodrone_pgdata:
